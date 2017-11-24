@@ -3,7 +3,8 @@ import time
 import urllib.request
 import re
 from bs4 import BeautifulSoup, Comment
-import csv, string
+import csv
+import string
 
 # This is a project for my masters degree
 starting_time = time.clock

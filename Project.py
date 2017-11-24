@@ -3,11 +3,13 @@ import time
 import urllib.request
 import re
 from bs4 import BeautifulSoup, Comment
-import csv
 import string
 
 # This is a project for my masters degree
-starting_time = time.clock
+# starting_time = time.clock
+# end_time = time.clock
+# print(str(end_time - starting_time))
+print(time.clock())
 # set up logging properties
 fmt = '%(asctime)s %(levelname)s %(lineno)s %(message)s'
 logging.basicConfig(level='INFO', format=fmt, filename=r'C:\Users\hduser\PycharmProjects\Project\Project.log', datefmt='%m-%d-%Y %I:%M:%S %p')
@@ -23,16 +25,7 @@ baseball_reference_header = 'Name,Age,Tm,Lg,W,L,WL_Perct,ERA,G,GS,GF,CG,SHO,SV,I
 fan_graph_header = 'FB_Perct,FB_Vel,SL_Perct,SL_Vel,CT_Perct,CT_Vel,CB_Perct,CB_Vel,CH_Perct,CH_Vel,SF_Perct,SF_Vel,KN_Perct,KN_Vel,XX_Perct'
 columns = baseball_reference_header + fan_graph_header
 pages = list(range(1, 11))
-years = list(range(2017, 2018))
-
-
-# Write consolidated file
-def write_consolidate_output(record):
-    with open(consolidated_file, "a") as test_file:
-        csv.register_dialect("output", lineterminator='\r')
-        csv_writer = csv.writer(test_file, "output")
-        csv_writer.writerows(record)
-
+years = list(range(2000, 2018))
 
 # Make any empty fields zero '0'
 def zero_out_empty_fields(field):
@@ -42,20 +35,18 @@ def zero_out_empty_fields(field):
     else:
         return field
 
-
 # Make any empty fields zero '0'
-def zero_out_unicode(field):
-    if field.isspace():
-        return field.replace(u'\xa0', ' ')
-    else:
-        return field
+# def zero_out_unicode(field):
+#     if field.isspace():
+#         return field.replace(u'\xa0', ' ')
+#     else:
+#         return field
 
 
 # Make any empty fields zero '0'
 def add_space(field):
     filtered = field.replace(u'\xa0', ' ')
     return filtered
-
 
 logger.info("*** Starting Project ***")
 for year in years:
@@ -129,23 +120,20 @@ for year in years:
                 for q in fan_graph_mapping.get(k):
                     temp_dict[k].append(zero_out_empty_fields(q.rstrip(' %')))
 
-    #write_consolidate_output(list(temp_dict.keys()))
-    #write_consolidate_output(list(temp_dict.values()))
-    #write_consolidate_output(list(temp_dict.items()))
-
     with open(consolidated_file, "a") as test_file:
         test_file.write(str(columns) + '\n')
 
         for k, v in temp_dict.items():
-            test_file.write(str(k) + ',')
-
-
-            print(len(v))
+            test_file.write(str(k))
             for it in list(v):
-                test_file.write(it + ',')
-
+                test_file.write(',' + it)
             test_file.write('\r')
 
     pitching_table.clear()
-    print('Bob')
-end_time = time.clock
+    fan_graph_mapping.clear()
+    temp_dict.clear()
+    b_ref_data.clear()
+    b_ref_mapping.clear()
+
+print(time.clock())
+print('Done')

@@ -5,6 +5,7 @@ import re
 from bs4 import BeautifulSoup, Comment
 import csv, string
 
+# This is a project for my masters degree
 starting_time = time.clock
 # set up logging properties
 fmt = '%(asctime)s %(levelname)s %(lineno)s %(message)s'
@@ -23,12 +24,14 @@ columns = baseball_reference_header + fan_graph_header
 pages = list(range(1, 11))
 years = list(range(2017, 2018))
 
+
 # Write consolidated file
 def write_consolidate_output(record):
     with open(consolidated_file, "a") as test_file:
         csv.register_dialect("output", lineterminator='\r')
         csv_writer = csv.writer(test_file, "output")
         csv_writer.writerows(record)
+
 
 # Make any empty fields zero '0'
 def zero_out_empty_fields(field):
@@ -38,6 +41,7 @@ def zero_out_empty_fields(field):
     else:
         return field
 
+
 # Make any empty fields zero '0'
 def zero_out_unicode(field):
     if field.isspace():
@@ -45,10 +49,12 @@ def zero_out_unicode(field):
     else:
         return field
 
+
 # Make any empty fields zero '0'
 def add_space(field):
     filtered = field.replace(u'\xa0', ' ')
     return filtered
+
 
 logger.info("*** Starting Project ***")
 for year in years:

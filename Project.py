@@ -5,16 +5,15 @@ import re
 from bs4 import BeautifulSoup, Comment
 import string
 
-# This is a project for my masters degree
-# starting_time = time.clock
-# end_time = time.clock
-# print(str(end_time - starting_time))
-print(time.clock())
+# Call time clock for performance statistics
+time.clock()
+
 # set up logging properties
 fmt = '%(asctime)s %(levelname)s %(lineno)s %(message)s'
 logging.basicConfig(level='INFO', format=fmt, filename=r'C:\Users\hduser\PycharmProjects\Project\Project.log', datefmt='%m-%d-%Y %I:%M:%S %p')
 logger = logging.getLogger('Project')
 
+# Initialize list and maps
 pitching_table = []
 fan_graph_mapping = {}
 temp_dict = {}
@@ -24,6 +23,7 @@ b_ref_mapping = {}
 baseball_reference_header = 'Name,Age,Tm,Lg,W,L,WL_Perct,ERA,G,GS,GF,CG,SHO,SV,IP,H,R,ER,HR,BB,IBB,SO,HBP,BK,WP,BF,ERA_Plus,FIP,WHIP,H9,HR9,BB9,SO9,SO_W,'
 fan_graph_header = 'FB_Perct,FB_Vel,SL_Perct,SL_Vel,CT_Perct,CT_Vel,CB_Perct,CB_Vel,CH_Perct,CH_Vel,SF_Perct,SF_Vel,KN_Perct,KN_Vel,XX_Perct'
 columns = baseball_reference_header + fan_graph_header
+
 pages = list(range(1, 11))
 years = list(range(2000, 2018))
 
@@ -34,14 +34,6 @@ def zero_out_empty_fields(field):
         return field
     else:
         return field
-
-# Make any empty fields zero '0'
-# def zero_out_unicode(field):
-#     if field.isspace():
-#         return field.replace(u'\xa0', ' ')
-#     else:
-#         return field
-
 
 # Make any empty fields zero '0'
 def add_space(field):

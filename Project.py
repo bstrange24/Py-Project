@@ -25,7 +25,6 @@ baseball_ref_mapping = {}
 # Header information for consolidated file
 baseball_reference_header = 'Name,Age,Tm,Lg,W,L,WL_Perct,ERA,G,GS,GF,CG,SHO,SV,IP,H,R,ER,HR,BB,IBB,SO,HBP,BK,WP,BF,ERA_Plus,FIP,WHIP,H9,HR9,BB9,SO9,SO_W,'
 fan_graph_header = 'FB_Perct,FB_Vel,SL_Perct,SL_Vel,CT_Perct,CT_Vel,CB_Perct,CB_Vel,CH_Perct,CH_Vel,SF_Perct,SF_Vel,KN_Perct,KN_Vel,XX_Perct'
-#fan_graph_header = 'FB_Perct'#,FB_Vel,SL_Perct,SL_Vel,CT_Perct,CT_Vel,CB_Perct,CB_Vel,CH_Perct,CH_Vel,SF_Perct,SF_Vel,KN_Perct,KN_Vel,XX_Perct'
 columns = baseball_reference_header + fan_graph_header
 
 # Years and pages for the fan graph and baseball reference website
@@ -44,6 +43,14 @@ def zero_out_empty_fields(field):
 def replace_unicode_chars(field):
     filtered = field.replace(u'\xa0', ' ')
     return filtered
+
+# Clear maps and list used during each year
+def clear_data_structure():
+    pitching_table.clear()
+    fan_graph_mapping.clear()
+    temp_dict.clear()
+    baseball_ref_data.clear()
+    baseball_ref_mapping.clear()
 
 # Loop over all the years from 2007 to 2017
 for year in years:
@@ -93,9 +100,6 @@ for year in years:
 
             # Clear url. This is done to go to the next web page
             url = ''
-    except RuntimeError as run_time_error:
-        logger.error("Runtime error occurred :: " + str(run_time_error))
-        raise
     except ConnectionError as connection_error:
         logger.error("Connection error occurred :: " + str(connection_error))
         raise
@@ -140,9 +144,6 @@ for year in years:
     except ConnectionError as connection_error:
         logger.error("Connection error occurred :: " + str(connection_error))
         raise
-    except RuntimeError as run_time_error:
-        logger.error("Runtime error occurred :: " + str(run_time_error))
-        raise
 
     try:
         # Open consolidated output file for writing
@@ -163,11 +164,12 @@ for year in years:
         raise
 
     # Clear maps and list for the next year
-    pitching_table.clear()
-    fan_graph_mapping.clear()
-    temp_dict.clear()
-    baseball_ref_data.clear()
-    baseball_ref_mapping.clear()
+    clear_data_structure()
+    # pitching_table.clear()
+    # fan_graph_mapping.clear()
+    # temp_dict.clear()
+    # baseball_ref_data.clear()
+    # baseball_ref_mapping.clear()
 
 print(time.clock())
 print('Done')

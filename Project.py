@@ -100,7 +100,6 @@ for year in years:
         logger.error("Connection error occurred :: " + str(connection_error))
         raise
 
-
     try:
         # Open baseball reference url with BeautifulSoup
         soup = BeautifulSoup(urllib.request.urlopen(baseball_ref_url).read(), "html.parser")
@@ -145,19 +144,23 @@ for year in years:
         logger.error("Runtime error occurred :: " + str(run_time_error))
         raise
 
-    # Open consolidated output file for writing
-    with open(consolidated_file, "a") as output_file:
-        # Write column fields to output file
-        output_file.write(str(columns) + '\n')
-        # Loop over temporary dictionary
-        for key, value in temp_dict.items():
-            # Write keys to output file
-            output_file.write(str(key))
-            # Loop over values in the temporary dictionary and write to the output file
-            for values in list(value):
-                output_file.write(',' + values)
-            # Write carriage return after each record
-            output_file.write('\r')
+    try:
+        # Open consolidated output file for writing
+        with open(consolidated_file, "a") as output_file:
+            # Write column fields to output file
+            output_file.write(str(columns) + '\n')
+            # Loop over temporary dictionary
+            for key, value in temp_dict.items():
+                # Write keys to output file
+                output_file.write(str(key))
+                # Loop over values in the temporary dictionary and write to the output file
+                for values in list(value):
+                    output_file.write(',' + values)
+                # Write carriage return after each record
+                output_file.write('\r')
+    except IOError as io_error:
+        logger.error("IO error occurred when writing consolidated file :: " + str(io_error))
+        raise
 
     # Clear maps and list for the next year
     pitching_table.clear()

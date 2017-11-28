@@ -10,8 +10,7 @@ time.clock()
 
 # set up logging properties
 fmt = '%(asctime)s %(levelname)s %(lineno)s %(message)s'
-logging.basicConfig(level='INFO', format=fmt, filename=r'C:\Users\hduser\Desktop\project\logs\Project.log',
-                    datefmt='%m-%d-%Y %I:%M:%S %p')
+logging.basicConfig(level='INFO', format=fmt, filename=r'C:\Users\hduser\Desktop\project\logs\Project.log',datefmt='%m-%d-%Y %I:%M:%S %p')
 logger = logging.getLogger('Project')
 logger.info("*** Starting Project ***")
 logger.info(time.clock())
@@ -26,14 +25,11 @@ baseball_ref_mapping = {}
 # Header information for consolidated file
 baseball_reference_header = 'Name,Age,Tm,Lg,W,L,WL_Perct,ERA,G,GS,GF,CG,SHO,SV,IP,H,R,ER,HR,BB,IBB,SO,HBP,BK,WP,BF,ERA_Plus,FIP,WHIP,H9,HR9,BB9,SO9,SO_W,'
 fan_graph_header = 'FB_Perct,FB_Vel,SL_Perct,SL_Vel,CT_Perct,CT_Vel,CB_Perct,CB_Vel,CH_Perct,CH_Vel,SF_Perct,SF_Vel,KN_Perct,KN_Vel,XX_Perct'
-fan_graph_column_list = ['FB_Perct', 'FB_Vel', 'SL_Perct', 'SL_Vel', 'CT_Perct', 'CT_Vel', 'CB_Perct', 'CB_Vel',
-                         'CH_Perct', 'CH_Vel', 'SF_Perct', 'SF_Vel', 'KN_Perct', 'KN_Vel', 'XX_Perct']
-# baseball_ref_column_list = ['Name','Age','Tm','Lg','W','L','WL_Perct','ERA','G','GS','GF','CG','SHO','SV','IP','H','R','ER','HR','BB','IBB','SO','HBP','BK','WP','BF','ERA_Plus','FIP','WHIP','H9','HR9','BB9','SO9','SO_W']
+fan_graph_column_list = ['FB_Perct', 'FB_Vel', 'SL_Perct', 'SL_Vel', 'CT_Perct', 'CT_Vel', 'CB_Perct', 'CB_Vel','CH_Perct', 'CH_Vel', 'SF_Perct', 'SF_Vel', 'KN_Perct', 'KN_Vel', 'XX_Perct']
 
 # Years and pages for the fan graph and baseball reference website
 pages = list(range(1, 11))
-years = list(range(2017, 2018))
-
+years = list(range(2007, 2018))
 
 # Make any empty fields zero '0'
 def zero_out_empty_fields(field):
@@ -43,12 +39,10 @@ def zero_out_empty_fields(field):
     else:
         return field
 
-
 # Make \xa0 characters a space
 def replace_unicode_chars(field):
     filtered = field.replace(u'\xa0', ' ')
     return filtered
-
 
 # Clear maps and list used during each year
 def clear_data_structure():
@@ -58,15 +52,13 @@ def clear_data_structure():
     baseball_ref_data.clear()
     baseball_ref_mapping.clear()
 
-
 # Loop over all the years from 2007 to 2017
 for year in years:
     for field in fan_graph_column_list:
         columns = baseball_reference_header + field
 
         # Set fan graph url to the year that is getting processed
-        base_fan_graph_url = 'http://www.fangraphs.com/leaders.aspx?pos=all&stats=pit&lg=all&qual=30&type=4&season=' + str(
-            year) + '&month=0&season1=' + str(year) + '&ind=0&team=0&rost=0&age=17,58&filter=&players=0&page='
+        base_fan_graph_url = 'http://www.fangraphs.com/leaders.aspx?pos=all&stats=pit&lg=all&qual=30&type=4&season=' + str(year) + '&month=0&season1=' + str(year) + '&ind=0&team=0&rost=0&age=17,58&filter=&players=0&page='
 
         # Set baseball reference url to the year that is getting processed
         baseball_ref_url = 'http://www.baseball-reference.com/leagues/MLB/' + str(year) + '-standard-pitching.shtml'
@@ -78,14 +70,12 @@ for year in years:
         if field in fan_graph_column_list:
             isT = True
             # Consolidated file with fan graph and baseball reference data
-            consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(
-                year) + '_' + field + '_consolidated.csv'
+            consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(year) + '_' + field + '_consolidated.csv'
             logger.info("Consolidated file name :: " + consolidated_file)
         else:
             isT = False
             # Consolidated file with fan graph and baseball reference data
-            consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(
-                year) + 'TEST_consolidated.csv'
+            consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(year) + 'TEST_consolidated.csv'
             logger.info("Consolidated file name :: " + consolidated_file)
 
         try:
@@ -107,8 +97,7 @@ for year in years:
                     pitcher_name = str(pitcher_name.replace('.', ' '))
 
                     if isT:
-                        fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(
-                            field) + 3:fan_graph_column_list.index(field) + 4]
+                        fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
                     else:
                         fan_graph_mapping[pitcher_name] = pitching_table[3:]
 
@@ -125,8 +114,7 @@ for year in years:
                     pitcher_name = str(pitcher_name.replace('.', ''))
 
                     if isT:
-                        fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(
-                            field) + 3:fan_graph_column_list.index(field) + 4]
+                        fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
                     else:
                         fan_graph_mapping[pitcher_name] = pitching_table[3:]
 

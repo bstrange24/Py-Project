@@ -108,7 +108,13 @@ for year in years:
                 # Clear url. This is done to go to the next web page
                 fan_graph_url = ''
         except ConnectionError as connection_error:
-            logger.error("Connection error occurred :: " + str(connection_error))
+            logger.error("Connection error occurred during fan graph processing :: " + str(connection_error))
+            raise
+        except IndexError as index_error:
+            logger.error("Indexing error occurred during fan graph processing :: " + str(index_error))
+            raise
+        except KeyError as key_error:
+            logger.error("KeyError error occurred during fan graph processing :: " + str(key_error))
             raise
 
         try:
@@ -149,7 +155,13 @@ for year in years:
                         for keys in fan_graph_mapping.get(key):
                             temp_dict[key].append(zero_out_empty_fields(keys.rstrip(' %')))
         except ConnectionError as connection_error:
-            logger.error("Connection error occurred :: " + str(connection_error))
+            logger.error("Connection error occurred during baseball ref processing :: " + str(connection_error))
+            raise
+        except IndexError as index_error:
+            logger.error("Indexing error occurred during baseball ref processing :: " + str(index_error))
+            raise
+        except KeyError as key_error:
+            logger.error("KeyError error occurred during baseball ref processing :: " + str(key_error))
             raise
 
         try:
@@ -168,6 +180,9 @@ for year in years:
                     output_file.write('\r')
         except IOError as io_error:
             logger.error("IO error occurred when writing consolidated file :: " + str(io_error))
+            raise
+        except KeyError as key_error:
+            logger.error("KeyError error occurred when writing consolidated file:: " + str(key_error))
             raise
 
         # Clear list and dictionaries for the next year

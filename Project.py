@@ -71,17 +71,6 @@ for year in years:
         consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(year) + '_' + field + '_consolidated.csv'
         logger.info("Consolidated file name :: " + consolidated_file)
 
-        # if field in fan_graph_column_list:
-        #     isT = True
-        #     # Consolidated file with fan graph and baseball reference data
-        #     consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(year) + '_' + field + '_consolidated.csv'
-        #     logger.info("Consolidated file name :: " + consolidated_file)
-        # else:
-        #     isT = False
-        #     # Consolidated file with fan graph and baseball reference data
-        #     consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(year) + 'TEST_consolidated.csv'
-        #     logger.info("Consolidated file name :: " + consolidated_file)
-
         try:
             for page in pages:
                 fan_graph_url = base_fan_graph_url + str(page) + "_50"
@@ -101,11 +90,6 @@ for year in years:
                     pitcher_name = str(pitcher_name.replace('.', ' '))
                     fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
 
-                    # if isT:
-                    #     fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
-                    # else:
-                    #     fan_graph_mapping[pitcher_name] = pitching_table[3:]
-
                     pitching_table.clear()
 
                 for players in soup.findAll("tr", {"class": "rgAltRow"})[0:]:
@@ -118,11 +102,6 @@ for year in years:
                     pitcher_name = pitching_table[1].replace('\'', ' ')
                     pitcher_name = str(pitcher_name.replace('.', ''))
                     fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
-
-                    # if isT:
-                    #     fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
-                    # else:
-                    #     fan_graph_mapping[pitcher_name] = pitching_table[3:]
 
                     pitching_table.clear()
 

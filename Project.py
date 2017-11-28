@@ -32,16 +32,16 @@ pages = list(range(1, 11))
 years = list(range(2007, 2018))
 
 # Make any empty fields zero '0'
-def zero_out_empty_fields(field):
-    if field.isspace():
-        field = '0'
-        return field
+def zero_out_empty_fields(player_stat):
+    if player_stat.isspace():
+        player_stat = '0'
+        return player_stat
     else:
-        return field
+        return player_stat
 
 # Make \xa0 characters a space
-def replace_unicode_chars(field):
-    filtered = field.replace(u'\xa0', ' ')
+def replace_unicode_chars(player_stat):
+    filtered = player_stat.replace(u'\xa0', ' ')
     return filtered
 
 # Clear maps and list used during each year
@@ -67,16 +67,20 @@ for year in years:
         logger.info("Year processing :: " + str(year))
         logger.info("Field processing :: " + field)
 
-        if field in fan_graph_column_list:
-            isT = True
-            # Consolidated file with fan graph and baseball reference data
-            consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(year) + '_' + field + '_consolidated.csv'
-            logger.info("Consolidated file name :: " + consolidated_file)
-        else:
-            isT = False
-            # Consolidated file with fan graph and baseball reference data
-            consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(year) + 'TEST_consolidated.csv'
-            logger.info("Consolidated file name :: " + consolidated_file)
+        # Consolidated file with fan graph and baseball reference data
+        consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(year) + '_' + field + '_consolidated.csv'
+        logger.info("Consolidated file name :: " + consolidated_file)
+
+        # if field in fan_graph_column_list:
+        #     isT = True
+        #     # Consolidated file with fan graph and baseball reference data
+        #     consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(year) + '_' + field + '_consolidated.csv'
+        #     logger.info("Consolidated file name :: " + consolidated_file)
+        # else:
+        #     isT = False
+        #     # Consolidated file with fan graph and baseball reference data
+        #     consolidated_file = r'C:\Users\hduser\Desktop\project\consolidated\\' + str(year) + '\\' + str(year) + 'TEST_consolidated.csv'
+        #     logger.info("Consolidated file name :: " + consolidated_file)
 
         try:
             for page in pages:
@@ -86,37 +90,39 @@ for year in years:
                 # Open url with BeautifulSoup
                 soup = BeautifulSoup(urllib.request.urlopen(fan_graph_url).read(), "html.parser")
 
-                for division in soup.findAll("tr", {"class": "rgRow"})[0:]:
-                    for conf in division.findAll("td", {"class": "grid_line_regular"}):
-                        if conf.find("a") is not None:
-                            pitching_table.append(conf.find("a").contents[0])
+                for players in soup.findAll("tr", {"class": "rgRow"})[0:]:
+                    for stats in players.findAll("td", {"class": "grid_line_regular"}):
+                        if stats.find("a") is not None:
+                            pitching_table.append(stats.find("a").contents[0])
                         else:
-                            pitching_table.append(conf.contents[0])
+                            pitching_table.append(stats.contents[0])
 
                     pitcher_name = pitching_table[1].replace('\'', ' ')
                     pitcher_name = str(pitcher_name.replace('.', ' '))
+                    fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
 
-                    if isT:
-                        fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
-                    else:
-                        fan_graph_mapping[pitcher_name] = pitching_table[3:]
+                    # if isT:
+                    #     fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
+                    # else:
+                    #     fan_graph_mapping[pitcher_name] = pitching_table[3:]
 
                     pitching_table.clear()
 
-                for division in soup.findAll("tr", {"class": "rgAltRow"})[0:]:
-                    for conf in division.findAll("td", {"class": "grid_line_regular"}):
-                        if conf.find("a") is not None:
-                            pitching_table.append(conf.find("a").contents[0])
+                for players in soup.findAll("tr", {"class": "rgAltRow"})[0:]:
+                    for stats in players.findAll("td", {"class": "grid_line_regular"}):
+                        if stats.find("a") is not None:
+                            pitching_table.append(stats.find("a").contents[0])
                         else:
-                            pitching_table.append(conf.contents[0])
+                            pitching_table.append(stats.contents[0])
 
                     pitcher_name = pitching_table[1].replace('\'', ' ')
                     pitcher_name = str(pitcher_name.replace('.', ''))
+                    fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
 
-                    if isT:
-                        fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
-                    else:
-                        fan_graph_mapping[pitcher_name] = pitching_table[3:]
+                    # if isT:
+                    #     fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
+                    # else:
+                    #     fan_graph_mapping[pitcher_name] = pitching_table[3:]
 
                     pitching_table.clear()
 
@@ -184,8 +190,6 @@ for year in years:
         except IOError as io_error:
             logger.error("IO error occurred when writing consolidated file :: " + str(io_error))
             raise
-
-            # Clear maps and list for the next year
 
         # Clear list and dictionaries for the next year
         clear_data_structure()

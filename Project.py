@@ -13,7 +13,6 @@ fmt = '%(asctime)s %(levelname)s %(lineno)s %(message)s'
 logging.basicConfig(level='INFO', format=fmt, filename=r'C:\Users\hduser\Desktop\project\logs\Project.log',datefmt='%m-%d-%Y %I:%M:%S %p')
 logger = logging.getLogger('Project')
 logger.info("*** Starting Project ***")
-logger.info(time.clock())
 
 # Initialize list and maps
 pitching_table = []
@@ -21,6 +20,7 @@ fan_graph_mapping = {}
 temp_dict = {}
 baseball_ref_data = []
 baseball_ref_mapping = {}
+name_list = []
 
 # Header information for consolidated file
 baseball_reference_header = 'Name,Age,Tm,Lg,W,L,WL_Perct,ERA,G,GS,GF,CG,SHO,SV,IP,H,R,ER,HR,BB,IBB,SO,HBP,BK,WP,BF,ERA_Plus,FIP,WHIP,H9,HR9,BB9,SO9,SO_W,'
@@ -89,7 +89,7 @@ for year in years:
                     pitcher_name = pitching_table[1].replace('\'', ' ')
                     pitcher_name = str(pitcher_name.replace('.', ' '))
                     fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
-
+                    name_list.append(pitcher_name)
                     pitching_table.clear()
 
                 for players in soup.findAll("tr", {"class": "rgAltRow"})[0:]:
@@ -101,12 +101,14 @@ for year in years:
 
                     pitcher_name = pitching_table[1].replace('\'', ' ')
                     pitcher_name = str(pitcher_name.replace('.', ''))
+                    name_list.append(pitcher_name)
                     fan_graph_mapping[pitcher_name] = pitching_table[fan_graph_column_list.index(field) + 3:fan_graph_column_list.index(field) + 4]
-
                     pitching_table.clear()
 
                 # Clear url. This is done to go to the next web page
                 fan_graph_url = ''
+            # Log fan graph count
+            logger.info('Fan graph record count :: ' + str(len(fan_graph_mapping)))
         except ConnectionError as connection_error:
             logger.error("Connection error occurred during fan graph processing :: " + str(connection_error))
             raise
@@ -136,11 +138,15 @@ for year in years:
                 remove = string.punctuation
                 pattern = r"[{}]".format(remove)
                 name_filtered = re.sub(pattern, "", baseball_ref_data[0])
-                name_filtered = name_filtered.replace(u'\xa0', ' ')
+                print(name_filtered)
+                name_list.append(name_filtered)
                 # Add baseball reference data to the baseball reference map
                 baseball_ref_mapping[name_filtered] = baseball_ref_data[1:]
+
                 # Clear map for the next iteration
                 baseball_ref_data.clear()
+            # Log baseball reference count
+            logger.info('Baseball ref record count :: ' + str(len(baseball_ref_mapping)))
 
             # Loop over values in the fan graph map
             for key in fan_graph_mapping:
@@ -154,6 +160,8 @@ for year in years:
                     if temp_dict:
                         for keys in fan_graph_mapping.get(key):
                             temp_dict[key].append(zero_out_empty_fields(keys.rstrip(' %')))
+            # Log baseball reference count
+            logger.info('Consolidated record count :: ' + str(len(temp_dict)))
         except ConnectionError as connection_error:
             logger.error("Connection error occurred during baseball ref processing :: " + str(connection_error))
             raise
